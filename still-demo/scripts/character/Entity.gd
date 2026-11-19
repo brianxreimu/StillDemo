@@ -37,18 +37,18 @@ enum attack_type {
 	Projectile
 }
 
-## A Picture of the Character[br]
-## Useful for creating character cards and HUD icons
+## Gambar karakter[br]
+## ini buat nanti bikin karakter yang di HUD ama selector karakter
 @export var avatar : Texture2D
-## Name of the Character[br]
-## Useful for creating character cards, HUD and character selector
+## tampilan nama karakternya[br]
+## sama sih kek yang di atas
 @export var title : String
-## Type of Entity the character is[br]
-## Useful for creating character cards
-@export var type : character_typewinget install fresh-editorwinget install fresh-editorwinget install fresh-editorwinget install fresh-edwinget install fresh-editoritor
-## Type of Attack the character mainly uses[br]
-## Useful for creating character cards
-@export var attack : attack_typewinget install fresh-editor
+## Type entity karakternya[br]
+## intinya itu buat bikin karakter!
+@export var type : character_type
+## Tipe serangan utama karakter[br]
+## ini buat bikin karakter juga
+@export var attack : attack_type
 @export_group("Stats")
 ## HP max yang bakal dimiliki karakter[br]
 @export var Hit_Points : float
@@ -58,100 +58,100 @@ enum attack_type {
 @export var Run_Speed : float
 ## The upwards velocity at which the character jumps[br]
 @export var Jump_Velocity : float
-## The attack range of the character[br][br]
-## Useful for creating character cards
+## jangkauan serangan karakter[br][br]
+## yaaa buat bikin karakter
 @export var Attack_Range : float
-## Rate of change of Velocity
+## laju karakter
 @export var Acceleration : float = 1000
 #endregion
 
 #region Meta
-## Emited when the character is spawned
+## dipakai kalau karakter spawn
 signal spawned(Entity: Entity)
-## Emited when the character walks or runs
+## dipakai kalau karakternya gerak, jalan / lari
 signal moved(dir: float, run : bool)
-## Emitted when the character jumps
+## dipakai kalau karakter lompat
 signal jumped
-## Emitted when the character is damaged
+## dipakai kalau karakter kena damage
 signal hurt(amount: float)
-## Emitted when the character dies
+## dipakai kalau karakter mati
 signal died
 
 @export_category("Meta")
-## A Bool to disable gravity for this character
+## boolean buat disable gravity karakter
 @export var gravity : bool = true
-## A Bool to disable character's built-in AI
+## boolean buat disable AI bawaan karakter
 @export var puppet : bool = false
-## A Reference to the [CollisionShape2D] of the character
+## referensi buat [CollisionShape2D] karakternya
 @export var collider : CollisionShape2D
 @export_group("Animation Names", "ANM_N")
-## Animation Name for Walking[br]
+## Nama animasi buat jalan[br]
 @export var ANM_N_Walk : String
-## Anmiation Name for Running[br]
+## Nama animasi buat lari[br]
 @export var ANM_N_Run : String
-## Animation Name for Jumping[br]
+## Nama animasi buat lompat[br]
 @export var ANM_N_Jump : String
-## Animation Name for Hurting[br]
+## Nama animasi kalau kena damage[br]
 @export var ANM_N_Hurt : String
-## Animation Name for Dying[br]
+## Nama Animasi buat sekarat[br]
 @export var ANM_N_Die : String
-## A list of names of all animations that will automatically pause the characters movement[br]
+## list nama semua animasi yang bakal otomatis pause gerakan karakternya[br]
 @export var ANM_N_auto_pause_movement : Array
 @export_group("Animation Player", "ANM_P")
-## A Reference to the [AnimatedSprite2D] of the character
+## referensi [AnimatedSprite2D] buat karakter
 @export var ANM_P_Animated_Sprite : AnimatedSprite2D
-## A Reference to the [AnimationPlayer] of the character
+## referensi [AnimationPlayer] buat karakter
 @export var ANM_P_Animation_Player : AnimationPlayer
-## A Reference to the [AnimationTree] of the character
+## referensi [AnimationTree] buat karakter
 @export var ANM_P_Animation_Tree : AnimationTree
 @export_group("Sound Effects", "SFX")
-## A Reference to the [AudioStreamPlayer2D] to play when the character spawns
+## Referensi buat [AudioStreamPlayer2D] kalau karakternya spawn
 @export var SFX_Spawn : AudioStreamPlayer2D
-## A Reference to the [AudioStreamPlayer2D] to play when the character walks
+## Referensi buat [AudioStreamPlayer2D] kalau karakternya jalan biasa
 @export var SFX_Walk : AudioStreamPlayer2D
-## A Reference to the [AudioStreamPlayer2D] to play when the character runs
+## Referensi buat [AudioStreamPlayer2D] to kalau karakternya lari
 @export var SFX_Run : AudioStreamPlayer2D
-## A Reference to the [AudioStreamPlayer2D] to play when the character jumps
+## Referensi ke [AudioStreamPlayer2D] buat jalan kalau karakternya lompat
 @export var SFX_Jump : AudioStreamPlayer2D
-## A Reference to the [AudioStreamPlayer2D] to play when the character is hurt
+## Referensi ke [AudioStreamPlayer2D] buat jalan kalau karakter kena damage
 @export var SFX_Hurt : AudioStreamPlayer2D
-## A Reference to the [AudioStreamPlayer2D] to play when the character dies
+## Referensi ke [AudioStreamPlayer2D] buat jalan kalau karakter mati
 @export var SFX_Die : AudioStreamPlayer2D
 
 ## buat enable/disable warning node yang ilang
 @export var show_warnings : bool = true
 
-## buat cek kalau ada node atau path yang ilang
+## buat cek kalau ada node atau path yang ilang atau programnya eror ya!
 func check_nodes():
 	if not show_warnings: return
 	var t = "%s (%s)" % [title if title != "" else "Untitled Entity", name]
-	if not collider: push_warning("%s is missing a Collider" % t)
-	if not ANM_P_Animated_Sprite: push_warning("%s is missing a ANM_P_Animated_Sprite" % t)
+	if not collider: push_warning("%s Collider MISSING" % t)
+	if not ANM_P_Animated_Sprite: push_warning("%s ANM_P_Animated_Sprite nya gaada / MISSING!" % t)
 	else:
-		if not ANM_P_Animated_Sprite.sprite_frames: push_warning("%s does not have any sprite frames" % t)
+		if not ANM_P_Animated_Sprite.sprite_frames: push_warning("%s gaada sprite frames" % t)
 		else:
-			if not anim_exists(ANM_N_Walk): push_warning("%s does not have any '%s' %s animation" % [t, ANM_N_Walk, "(Walk)"])
-			if not anim_exists(ANM_N_Run):  push_warning("%s does not have any '%s' %s animation" % [t, ANM_N_Run,  "(Run)"])
-			if not anim_exists(ANM_N_Jump): push_warning("%s does not have any '%s' %s animation" % [t, ANM_N_Jump, "(Jump)"])
-			if not anim_exists(ANM_N_Hurt): push_warning("%s does not have any '%s' %s animation" % [t, ANM_N_Hurt, "(Hurt)"])
-			if not anim_exists(ANM_N_Die):  push_warning("%s does not have any '%s' %s animation" % [t, ANM_N_Die,  "(Die)"])
-	if not ANM_P_Animation_Player: push_warning("%s is missing a ANM_P_Animation_Player" % t)
-	if not ANM_P_Animation_Tree: push_warning("%s is missing a ANM_P_Animation_Tree" % t)
-	if not SFX_Spawn: push_warning("%s is missing a SFX_Spawn" % t)
-	if not SFX_Walk: push_warning("%s is missing a SFX_Walk" % t)
-	if not SFX_Run: push_warning("%s is missing a SFX_Run" % t)
-	if not SFX_Jump: push_warning("%s is missing a SFX_Jump" % t)
-	if not SFX_Hurt: push_warning("%s is missing a SFX_Hurt" % t)
-	if not SFX_Die: push_warning("%s is missing a SFX_Die" % t)
+			if not anim_exists(ANM_N_Walk): push_warning("%s ga punya '%s' %s animasi" % [t, ANM_N_Walk, "(Walk)"])
+			if not anim_exists(ANM_N_Run):  push_warning("%s ga punya '%s' %s animasi" % [t, ANM_N_Run,  "(Run)"])
+			if not anim_exists(ANM_N_Jump): push_warning("%s ga punya '%s' %s animasi" % [t, ANM_N_Jump, "(Jump)"])
+			if not anim_exists(ANM_N_Hurt): push_warning("%s ga punya '%s' %s animasi" % [t, ANM_N_Hurt, "(Hurt)"])
+			if not anim_exists(ANM_N_Die):  push_warning("%s ga punya '%s' %s animasi" % [t, ANM_N_Die,  "(Die)"])
+	if not ANM_P_Animation_Player: push_warning("%s ANM_P_Animation_Player nya MISSING!" % t)
+	if not ANM_P_Animation_Tree: push_warning("%s ANM_P_Animation_Tree nya MISSING" % t)
+	if not SFX_Spawn: push_warning("%s SFX_Spawn MISSING" % t)
+	if not SFX_Walk: push_warning("%s SFX_Walk MISSING" % t)
+	if not SFX_Run: push_warning("%s SFX_Run MISSING" % t)
+	if not SFX_Jump: push_warning("%s SFX_Jump MISSING" % t)
+	if not SFX_Hurt: push_warning("%s SFX_Hurt MISSING" % t)
+	if not SFX_Die: push_warning("%s SFX_Die MISSING" % t)
 #endregion
 
-#region Core / inti
+#region Core / inti (ini masih dibenerin!)
 ## kondisi hp karakter disaat itu juga
 var hp : float
-## A [Node2D] which always faces right regardless of the character's position or rotation[br]
-## This is intended to be used as a container for RayCasts which need to be independant
+## node2d ini harusnya buat rpg platformer, aku salah ambil referensi harusnya top down[br]
+## kurang tau juga fungsinya apaan, yang ini aku ambil mentah
 var RayBox : Node2D
-## The direction the character is facing
+## yaa hal tentang platformer intinya
 var facing : int = 1
 
 func _ready() -> void:
@@ -167,20 +167,20 @@ func _physics_process(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, move_x, delta*Acceleration)
 	move_and_slide()
 
-## Changes the direction the character is currently facing
+## buat ganti arah
 func flip() -> void:
 	facing *= -1
 	scale.x *= -1
 	RayBox.scale.x = facing
 #endregion
 
-#region gerakan / movement
+#region gerakan / movement (ini belum jadi ya!)
 ## Boolean yang paksa buat pause gerakan karakter
 var force_pause : bool = false
-## A [float] to store the velocity applied due to [code]move()[/code]
+## 
 var move_x : float = 0
 
-## Checks whether or not movement should be paused at the current moment
+## harusnya buat pause karakter juga !
 func pause_movement() -> bool:
 	var is_paused := false
 	if force_pause: is_paused = true
@@ -195,29 +195,29 @@ func quick_pause(duration : float = 0.3) -> void:
 	force_pause = false
 
 ## buat gerakin karakter (jalan atau lari entahlah)
-func move(x_dir : float, run : bool = false) -> void:
-	if x_dir * facing < 0 : flip()
-	if pause_movement(): return
-	var delta = get_physics_process_delta_time()
-	if x_dir != 0:
-		if run:
-			move_x = x_dir * Run_Speed * delta * 60
-			if is_on_floor():
-				start_anim(ANM_N_Run)
-				moved.emit(x_dir, true)
-				if SFX_Run: SFX_Run.play()
-				if SFX_Walk: SFX_Walk.stop()
-		else:
-			move_x = x_dir * Walk_Speed * delta * 50
-			if is_on_floor():
-				start_anim(ANM_N_Walk)
-				moved.emit(x_dir, false)
-				if SFX_Run: SFX_Run.stop()
-				if SFX_Walk: SFX_Walk.play()
-	else:
-		move_x = 0
-		if SFX_Run: SFX_Run.stop()
-		if SFX_Walk: SFX_Walk.stop()
+#func move(x_dir : float, run : bool = false) -> void:
+	#if x_dir * facing < 0 : flip()
+	#if pause_movement(): return
+	#var delta = get_physics_process_delta_time()
+	#if x_dir != 0:
+		#if run:
+			#move_x = x_dir * Run_Speed * delta * 60
+			#if is_on_floor():
+			#	start_anim(ANM_N_Run)
+			#	moved.emit(x_dir, true)
+			#	if SFX_Run: SFX_Run.play()
+			#	if SFX_Walk: SFX_Walk.stop()
+		#else:
+			#move_x = x_dir * Walk_Speed * delta * 50
+		#	if is_on_floor():
+			#	start_anim(ANM_N_Walk)
+			#	moved.emit(x_dir, false)
+			#	if SFX_Run: SFX_Run.stop()
+			#	if SFX_Walk: SFX_Walk.play()
+	#else:
+		#move_x = 0
+		#if SFX_Run: SFX_Run.stop()
+		#if SFX_Walk: SFX_Walk.stop()
 
 ## buat bikin karakternya lompat
 func jump(force := Jump_Velocity) -> void:
@@ -269,22 +269,22 @@ func anim_exists(animation : String) -> bool:
 func check_anim(animation : String) -> bool:
 	return ANM_P_Animated_Sprite and ANM_P_Animated_Sprite.animation == animation
 
-## Checks if a certain frame is currently playing
+## Cek kalau ada frame yang lagi jalan
 func check_frame(animation : String, frame : int) -> bool:
 	return ANM_P_Animated_Sprite and ANM_P_Animated_Sprite.animation == animation and ANM_P_Animated_Sprite.frame == frame
 
-## Checks if an animation is currently at it's last frame
+## Cek kalau animasi ada di frame terakhir saat itu
 func check_anim_end(animation : String) -> bool:
 	return ANM_P_Animated_Sprite and ANM_P_Animated_Sprite.animation == animation and ANM_P_Animated_Sprite.frame == ANM_P_Animated_Sprite.sprite_frames.get_frame_count(animation) - 1
 
-## Waits until a certain frame starts playing
+## tunggu sampai yakin ada frame yang jalan
 func await_frame(animation: String, frame : int) -> void:
 	while ANM_P_Animated_Sprite and !check_frame(animation, frame):
 		if not get_tree(): break
 		await get_tree().process_frame
 	return
 
-## Waits until a certain animation ends
+## tunggu sampai yakin animasi selesai
 func await_anim_end(animation: String) -> void:
 	while ANM_P_Animated_Sprite and !check_anim_end(animation):
 		if not get_tree(): break
