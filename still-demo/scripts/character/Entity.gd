@@ -1,38 +1,39 @@
+##class ini merupakan turunan dari CharacterBody2D
 extends CharacterBody2D
 
-## Base Class for all 2D Entities. It contains character stats and meta data.
+## Basic buat semua entity 2d. isinya stat karakter and meta data.
 ## [br]
-## Handles core logic including:[br]
+## juga buat ngatur logika inti, seperti:[br]
 ## - [i]Gravity[/i][br]
 ## - [i]Face Direction (and a fixed Container for RayCasts)[/i][br]
-## - [i]Hitpoints[/i][br]
-## - [i]Movement[/i][br]
-## - [i]Animation Control[/i][br]
+## - [i]Hitpoint[/i][br]
+## - [i]Movement karakter[/i][br]
+## - [i]Kontrol animasi[/i][br]
 ## - [i]Basic Audio[/i][br]
 class_name Entity
 
-#region Character Stats
-## The type of a character an entity can be
+#region Stat Karakter
+## tipe karakter sebuah entity
 enum character_type {
-	## Hero Character
+	## karakter hero
 	Hero,
-	## Ally of the Hero Character
+	## temen karakter hero
 	Ally,
-	## Neutral Character
+	## karakter netral
 	Civillian,
-	## Minions of the Enemy Boss
+	## musuh
 	Enemy,
-	## Enemy Boss
+	## Boss
 	Boss
 }
 
-## Main Attack type of the character
+## Tipe serangan utama karakter
 enum attack_type {
-	## Cannot Attack
+	## gabisa nyerang
 	None,
-	## Uses Melee attacks mainly
+	## karakter secara default pakai melee
 	Melee,
-	## Uses Projectile attacks mainly
+	## pakai serangan proyektil secara default
 	Projectile
 }
 
@@ -44,16 +45,16 @@ enum attack_type {
 @export var title : String
 ## Type of Entity the character is[br]
 ## Useful for creating character cards
-@export var type : character_type
+@export var type : character_typewinget install fresh-editorwinget install fresh-editorwinget install fresh-editorwinget install fresh-edwinget install fresh-editoritor
 ## Type of Attack the character mainly uses[br]
 ## Useful for creating character cards
-@export var attack : attack_type
+@export var attack : attack_typewinget install fresh-editor
 @export_group("Stats")
-## Max HP that the character will have[br]
+## HP max yang bakal dimiliki karakter[br]
 @export var Hit_Points : float
-## The walking speed of the character[br]
+## Kecepatan jalan karakternya[br]
 @export var Walk_Speed : float
-## The running speed of the character[br]
+## Kecepatan lari karakter[br]
 @export var Run_Speed : float
 ## The upwards velocity at which the character jumps[br]
 @export var Jump_Velocity : float
@@ -117,10 +118,10 @@ signal died
 ## A Reference to the [AudioStreamPlayer2D] to play when the character dies
 @export var SFX_Die : AudioStreamPlayer2D
 
-## Enable/Disable Warnings for missing Nodes
+## buat enable/disable warning node yang ilang
 @export var show_warnings : bool = true
 
-## Checks for missing node references/paths
+## buat cek kalau ada node atau path yang ilang
 func check_nodes():
 	if not show_warnings: return
 	var t = "%s (%s)" % [title if title != "" else "Untitled Entity", name]
@@ -144,8 +145,8 @@ func check_nodes():
 	if not SFX_Die: push_warning("%s is missing a SFX_Die" % t)
 #endregion
 
-#region Core
-## Current HP of the character
+#region Core / inti
+## kondisi hp karakter disaat itu juga
 var hp : float
 ## A [Node2D] which always faces right regardless of the character's position or rotation[br]
 ## This is intended to be used as a container for RayCasts which need to be independant
@@ -173,8 +174,8 @@ func flip() -> void:
 	RayBox.scale.x = facing
 #endregion
 
-#region Movement
-## A Boolean to forcefully pause character movement
+#region gerakan / movement
+## Boolean yang paksa buat pause gerakan karakter
 var force_pause : bool = false
 ## A [float] to store the velocity applied due to [code]move()[/code]
 var move_x : float = 0
@@ -187,13 +188,13 @@ func pause_movement() -> bool:
 	if is_paused: velocity.x = 0
 	return is_paused
 
-## Temporarily forces a pause on character movement
+## buat berhentiin gerakan karakter untuk sementara
 func quick_pause(duration : float = 0.3) -> void:
 	force_pause = true
 	await get_tree().create_timer(duration).timeout
 	force_pause = false
 
-## Used to move the character by making it walk/run
+## buat gerakin karakter (jalan atau lari entahlah)
 func move(x_dir : float, run : bool = false) -> void:
 	if x_dir * facing < 0 : flip()
 	if pause_movement(): return
@@ -218,7 +219,7 @@ func move(x_dir : float, run : bool = false) -> void:
 		if SFX_Run: SFX_Run.stop()
 		if SFX_Walk: SFX_Walk.stop()
 
-## Makes the character jump
+## buat bikin karakternya lompat
 func jump(force := Jump_Velocity) -> void:
 	if pause_movement() or not is_on_floor() or check_anim(ANM_N_Jump): return
 	velocity.y -= force
@@ -228,11 +229,11 @@ func jump(force := Jump_Velocity) -> void:
 #endregion
 
 #region HP
-## Instantly kills the characters
+## Instant kill
 func kill() -> void:
 	damage(hp)
 
-## Applies damage to the character
+## buat nge-damage ke karakternya yaa
 func damage(amount: float) -> void:
 	if hp <= 0: return
 	hp -= amount
@@ -243,7 +244,7 @@ func damage(amount: float) -> void:
 		if SFX_Hurt: SFX_Hurt.play()
 		hurt.emit(amount)
 
-## Procedure for when the character dies
+## Ini kalau karakternya tewas
 func _die():
 	set_process(false)
 	set_physics_process(false)
@@ -259,12 +260,12 @@ func _die():
 	queue_free()
 #endregion
 
-#region ANM
-## Checks if an animation is available
+#region Animasi
+## ini program yang cek kalau animasi nya ada atau ngga
 func anim_exists(animation : String) -> bool:
 	return ANM_P_Animated_Sprite and ANM_P_Animated_Sprite.sprite_frames.has_animation(animation)
 
-## Checks if an animation is currently playing
+## buat cek kalau ada animasi yang jalan
 func check_anim(animation : String) -> bool:
 	return ANM_P_Animated_Sprite and ANM_P_Animated_Sprite.animation == animation
 
@@ -290,14 +291,14 @@ func await_anim_end(animation: String) -> void:
 		await get_tree().process_frame
 	return
 
-## Triggers a travel to an animation or forcefully jumps to it
+## buat memicu pindah animasi
 func start_anim(animation : String, force : bool = false) -> void:
 	if ANM_P_Animation_Tree:
 		if force: ANM_P_Animation_Tree.get("parameters/playback").start(animation)
 		else: ANM_P_Animation_Tree.get("parameters/playback").travel(animation)
 	elif ANM_P_Animated_Sprite: ANM_P_Animated_Sprite.play(animation)
 
-## Forcefully starts an animation and waits till the end
+## paksa animasinya mulai dan tunggu sampai selesai
 func force_anim(animation : String) -> void:
 	while ANM_P_Animated_Sprite and !check_anim_end(animation):
 		if not check_anim(animation): start_anim(animation, true)
