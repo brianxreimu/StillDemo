@@ -1,0 +1,24 @@
+. class_name : digunakan untuk memberikan nama kelas pada sebuah script agar bisa dikenali dan digunakan oleh script lain
+
+. get_node(): salah satu fungsi bawaan godot untuk ambil referensi node. misalnya:
+var player = get_node("player")
+berarti variabel player simpan referensi ke Node player
+
+. extends : digunakan untuk mewarisi sebuah class. contohnya: extends CharacterBody2D (berarti ambil class dari CharacterBody2D) / atau bisa dibilang ngambil sifat dari induk
+
+. @export : biar variabel kelihatan di Inspector. biasanya sekalian dipakai waktu bikin variabel.
+(Variabel yang sama bisa dipakai di script yang beda asalkan class nya juga dipanggil). Contohnya:
+extends CharacterBody2D
+@export var hp: float
+
+lalu di script lain tinggal perlu tulis
+player.hp = 100
+
+. var : dipakai untuk membuat variabel yang nilainya bisa diubah. contohnya membuat nilai kondisi health pemain:
+var health: float = 100 (ini contoh saja biar mudah dimengerti)
+
+. const : dipakai untuk membuat variabel yang nilainya tetap. contohnya membuat nilai maksimal hp:
+const MAX_HEALTH: float = 100
+
+(ada tipe data bisa int atau float, tergantung mau pakai bilangan bulat atau desimal. disini aku banyaknya pakai desimal biar fleksibel yaitu float)
+
